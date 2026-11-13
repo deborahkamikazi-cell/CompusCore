@@ -1,1 +1,79 @@
-# CompusCore
+# CampusCare
+
+CampusCare is a Flutter app for reporting and tracking campus incidents. Students with a verified ALU email submit issues (water, electricity, Wi-Fi, furniture, sanitation, safety, or other). Authorized staff review those reports and move them through Submitted, Under Review, In Progress, and Resolved.
+
+This phase sets up the project structure, design system, routing, models, and placeholder screens. Firebase is a dependency, but it is not configured yet. The app still launches and uses in-memory sample data.
+
+## Run
+
+```bash
+flutter pub get
+flutter run
+```
+
+Android and iOS only. From the splash screen, continue to onboarding and login. **Continue as student** and **Continue as staff** are temporary buttons so the role guard can be tried before Firebase Auth exists.
+
+## Project structure
+
+```text
+lib/
+  main.dart                 App entry. Firebase init is guarded.
+  app.dart                  Theme and go_router host, under ProviderScope.
+  core/                     App-wide code that features share.
+    theme/                  Colors, type, spacing, Material 3 ThemeData.
+    router/                 Route paths, role redirect, GoRouter config.
+    constants/              Strings, validators, Firestore and Storage paths.
+    utils/                  Date formatting and snackbars.
+    widgets/                Reusable UI. Placeholders until feature screens need them.
+  features/                 One folder per product area.
+    auth/                   Splash, onboarding, login, register, password, verify.
+    student_home/           Student home tab.
+    incidents/              Report, list, details, success, models, repository.
+    notifications/          Notification model and screen.
+    profile/                Shared profile screen.
+    staff/                  Staff dashboard, queue, and incident review.
+  shared/
+    models/                 AppUser and UserRole.
+    navigation/             Student and staff bottom-navigation shells.
+```
+
+Each feature is split into `presentation`, `domain`, and `data` when that feature owns state or persistence. Presentation widgets never call Firebase. Domain types stay free of Flutter and Firebase. Data types map those models to Firestore and implement repository interfaces.
+
+### Naming
+
+- Files and folders: `snake_case`.
+- Types: `PascalCase`. Widgets end in `Screen`, `Shell`, `Card`, `Badge`, or `Button`.
+- Providers: `camelCase` and end in `Provider` (`authControllerProvider`).
+- Routes: constants on `RouteNames`. Do not hardcode path strings in screens.
+- Visible copy: `AppStrings`. Colors and text styles: `Theme.of(context)`, backed by `AppColors` and `AppTextStyles`. Do not put hex colors or raw `TextStyle`s in screens.
+- Material widgets and `google_fonts` share `package:material_ui/material_ui.dart` on this Flutter version. Import that package instead of `package:flutter/material.dart`.
+
+### Where new code goes
+
+- Shared widget used by more than one feature: `lib/core/widgets`. Incident chips may import domain enums, not Firebase.
+- Widget used by one feature: `lib/features/<feature>/presentation/widgets`.
+- New screen: a `snake_case` file under that feature's `presentation` folder, then a route in `lib/core/router/app_router.dart`.
+- New persisted type: entity in `domain`, `fromMap` / `toMap` in `data`, path helper in `lib/core/constants/firestore_paths.dart`.
+
+### Roles
+
+`UserRole` is `student` or `staff`, stored on `users/{uid}`.
+
+- Unauthenticated users can open splash, onboarding, login, register, forgot-password, and verify-email.
+- Students land in the student shell (`/student/...`) and are redirected away from `/staff/...`.
+- Staff land in the staff shell (`/staff/...`) and are redirected away from `/student/...`.
+- The check lives in `RoleGuard` and is driven by `authControllerProvider`. That provider is a mock until Firebase Auth replaces `MockAuthRepository`.
+
+Shell tabs use `StatefulShellRoute` so each tab keeps its own navigation stack.
+
+### Data, for now
+
+`AuthRepository` and `IncidentRepository` are abstract. `MockAuthRepository` and `MockIncidentRepository` return sample users and incidents. Do not add Firebase calls in presentation code. Wire repositories in a later phase.
+
+Firestore paths: `users/{uid}`, `incidents/{incidentId}`, `notifications/{id}`. Storage path: `incident_images/{incidentId}/{fileName}`.
+
+### Firebase
+
+`main.dart` calls `Firebase.initializeApp()` and continues if native config is missing. Do not apply the Google Services Gradle plugin until `google-services.json` and `GoogleService-Info.plist` are added, or Android/iOS builds will fail.
+
+Assets belong in `assets/images` and `assets/icons`.
