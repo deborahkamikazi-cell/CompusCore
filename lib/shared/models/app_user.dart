@@ -32,6 +32,23 @@ class AppUser extends Equatable {
   final UserRole role;
   final String? photoUrl;
 
+  String get firstName {
+    final trimmed = fullName.trim();
+    if (trimmed.isEmpty) {
+      return '';
+    }
+    return trimmed.split(RegExp(r'\s+')).first;
+  }
+
+  /// "Deborah Uwase" -> "Deborah U."
+  String get reporterShortName {
+    final parts = fullName.trim().split(RegExp(r'\s+'));
+    if (parts.length < 2 || parts.last.isEmpty) {
+      return fullName;
+    }
+    return '${parts.first} ${parts.last[0].toUpperCase()}.';
+  }
+
   factory AppUser.fromMap(String uid, Map<String, dynamic> map) {
     return AppUser(
       uid: uid,

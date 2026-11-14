@@ -4,7 +4,7 @@ abstract final class AppStrings {
 
   static const splashTitle = 'Splash';
   static const onboardingTitle = 'Onboarding';
-  static const loginTitle = 'Login';
+  static const loginTitle = 'Welcome back';
   static const registerTitle = 'Register';
   static const forgotPasswordTitle = 'Forgot password';
   static const verifyEmailTitle = 'Verify email';
@@ -77,6 +77,88 @@ abstract final class AppStrings {
 
   static String signedInAs(String name, String role) =>
       'Signed in as $name ($role)';
+
+  static const tagline = 'Report and track campus issues in one place.';
+  static const logIn = 'Log in';
+  static const aluEmail = 'ALU email';
+  static const password = 'Password';
+  static const newHere = 'New here?';
+  static const registerWithAluEmail = 'Register with your ALU email';
+  static const verifiedEmailNote =
+      'Only verified ALU emails can sign in.';
+  static const showPassword = 'Show password';
+  static const hidePassword = 'Hide password';
+  static const invalidCredentials =
+      'Check your ALU email and password, then try again.';
+  static const greetingMorning = 'Good morning';
+  static const greetingAfternoon = 'Good afternoon';
+  static const greetingEvening = 'Good evening';
+  static const homeHeadline = 'Campus issues, handled.';
+  static const reportAnIssue = 'Report an Issue';
+  static const yourReports = 'Your reports';
+  static const recentReports = 'Recent reports';
+  static const browseByCategory = 'Browse by category';
+  static const seeAll = 'See all';
+  static const submitted = 'Submitted';
+  static const pending = 'Pending';
+  static const inProgress = 'In progress';
+  static const resolved = 'Resolved';
+  static const all = 'All';
+  static const allCategories = 'All categories';
+  static const searchReports = 'Search reports';
+  static const noMatchingReports = 'No reports match your search.';
+  static const noReportsYet = 'You have not reported an issue yet.';
+  static const couldNotLoadReports = 'Could not load reports.';
+  static const notificationsUnread = 'Unread notifications';
+  static const reportIncidentHeading = 'Report an incident';
+  static const titleLabel = 'Title';
+  static const categoryLabel = 'Category';
+  static const descriptionLabel = 'Description';
+  static const locationLabel = 'Location';
+  static const buildingLabel = 'Building';
+  static const floorLabel = 'Floor';
+  static const roomLabel = 'Room';
+  static const photosLabel = 'Photos';
+  static const camera = 'Camera';
+  static const gallery = 'Gallery';
+  static const removePhoto = 'Remove photo';
+  static const priorityLabel = 'Priority';
+  static const submitReport = 'Submit report';
+  static const titleRequired = 'Please add a title to continue.';
+  static const categoryRequired = 'Please choose a category.';
+  static const descriptionRequired = 'Please describe the issue.';
+  static const locationRequired = 'Please add a location.';
+  static const requiredMarker = '*';
+  static const photoPickFailed = 'Could not add that photo.';
+  static const reportSubmitted = 'Report submitted';
+  static const reportSubmittedBody =
+      'Facilities can now review this incident. You can track it from your reports.';
+  static const referenceNumber = 'Reference number';
+  static const viewMyReports = 'View my reports';
+  static const incidentDetails = 'Incident details';
+  static const description = 'Description';
+  static const status = 'Status';
+  static const reportedBy = 'Reported by';
+  static const staffNote = 'Staff note';
+  static const updateStatus = 'Update status';
+  static const statusNoteHint = 'Optional note for the student';
+  static const confirmStatusTitle = 'Update status?';
+  static const statusUpdated = 'Status updated';
+  static const noPhotos = 'No photos attached';
+  static const incidentNotFound = 'This incident could not be found.';
+  static const couldNotLoadIncident = 'Could not load this incident.';
+
+  static String greetingNamed(String greeting, String name) =>
+      '$greeting, $name';
+
+  static String confirmStatusMessage(String status) =>
+      'Change this incident to $status? The student timeline will update.';
+
+  static String statusUpdatedMessage(String status) =>
+      'Status updated to $status.';
+
+  static String unreadCount(int count) =>
+      count == 1 ? '1 unread notification' : '$count unread notifications';
 
   static String incidentIdLabel(String id) => 'Incident id: $id';
 }

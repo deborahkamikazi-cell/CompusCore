@@ -13,4 +13,7 @@ abstract final class AppSpacing {
 
   static const double minTouchTarget = 48;
   static const double buttonHeight = 52;
+  static const double thumbnail = minTouchTarget + xs;
+  static const double logoMark = minTouchTarget + md;
+  static const double wideLayout = 400;
 }

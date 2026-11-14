@@ -34,6 +34,7 @@ class IncidentModel {
         createdAt: _readDate(map['createdAt']),
         updatedAt: _readDate(map['updatedAt']),
         staffNote: map['staffNote'] as String?,
+        statusTimestamps: _readTimestamps(map['statusTimestamps']),
       ),
     );
   }
@@ -53,6 +54,10 @@ class IncidentModel {
       'createdAt': Timestamp.fromDate(incident.createdAt),
       'updatedAt': Timestamp.fromDate(incident.updatedAt),
       'staffNote': incident.staffNote,
+      'statusTimestamps': {
+        for (final entry in incident.statusTimestamps.entries)
+          entry.key.wireValue: entry.value.toIso8601String(),
+      },
     };
   }
 }
@@ -89,4 +94,17 @@ DateTime _readDate(Object? value) {
     return DateTime.tryParse(value) ?? DateTime.fromMillisecondsSinceEpoch(0);
   }
   return DateTime.fromMillisecondsSinceEpoch(0);
+}
+
+Map<IncidentStatus, DateTime> _readTimestamps(Object? value) {
+  if (value is! Map) {
+    return const <IncidentStatus, DateTime>{};
+  }
+  final timestamps = <IncidentStatus, DateTime>{};
+  for (final entry in value.entries) {
+    timestamps[IncidentStatus.fromWire(entry.key.toString())] = _readDate(
+      entry.value,
+    );
+  }
+  return timestamps;
 }

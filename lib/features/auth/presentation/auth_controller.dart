@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:campus_care/features/auth/data/auth_repository.dart';
 import 'package:campus_care/features/auth/data/mock_auth_repository.dart';
+import 'package:campus_care/features/auth/domain/auth_failure.dart';
 import 'package:campus_care/features/auth/domain/auth_session.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
@@ -21,22 +22,32 @@ class AuthController extends Notifier<AuthSession> {
     }
   }
 
+  Future<void> signIn({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final user = await ref
+          .read(authRepositoryProvider)
+          .signInWithEmail(email: email, password: password);
+      state = AuthSession.authenticated(user);
+    } on AuthFailure {
+      rethrow;
+    }
+  }
+
   Future<void> signInAsStudent() {
-    return _signIn(MockAuthRepository.studentEmail);
+    return signIn(
+      email: MockAuthRepository.studentEmail,
+      password: MockAuthRepository.mockPassword,
+    );
   }
 
   Future<void> signInAsStaff() {
-    return _signIn(MockAuthRepository.staffEmail);
-  }
-
-  Future<void> _signIn(String email) async {
-    final user = await ref
-        .read(authRepositoryProvider)
-        .signInWithEmail(
-          email: email,
-          password: MockAuthRepository.mockPassword,
-        );
-    state = AuthSession.authenticated(user);
+    return signIn(
+      email: MockAuthRepository.staffEmail,
+      password: MockAuthRepository.mockPassword,
+    );
   }
 
   Future<void> signOut() async {

@@ -111,7 +111,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: RouteNames.studentReports,
-                builder: (context, state) => const ReportsListScreen(),
+                builder: (context, state) => ReportsListScreen(
+                  initialCategory: state.uri.queryParameters['category'],
+                ),
                 routes: [
                   GoRoute(
                     path: ':id',
@@ -171,7 +173,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 routes: [
                   GoRoute(
                     path: ':id',
-                    parentNavigatorKey: rootNavigatorKey,
                     builder: (context, state) => StaffIncidentDetailsScreen(
                       incidentId: state.pathParameters['id']!,
                     ),

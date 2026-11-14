@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:campus_care/core/constants/app_strings.dart';
 import 'package:campus_care/core/constants/validators.dart';
 import 'package:campus_care/features/auth/data/auth_repository.dart';
+import 'package:campus_care/features/auth/domain/auth_failure.dart';
 import 'package:campus_care/shared/models/app_user.dart';
 
 class MockAuthRepository implements AuthRepository {
@@ -9,13 +11,14 @@ class MockAuthRepository implements AuthRepository {
   final StreamController<AppUser?> _controller =
       StreamController<AppUser?>.broadcast();
 
-  static const studentEmail = 'amina.uwase@alustudent.com';
+  static const studentEmail = 'd.uwase@alustudent.com';
   static const staffEmail = 'jean.habimana@alueducation.com';
   static const mockPassword = 'password';
+  static const deborahId = 'student-deborah';
 
   static const student = AppUser(
-    uid: 'student-001',
-    fullName: 'Amina Uwase',
+    uid: deborahId,
+    fullName: 'Deborah Uwase',
     email: studentEmail,
     role: UserRole.student,
   );
@@ -52,17 +55,44 @@ class MockAuthRepository implements AuthRepository {
     required String email,
     required String password,
   }) async {
+    await Future<void>.delayed(const Duration(milliseconds: 350));
     final normalized = email.trim().toLowerCase();
-    final AppUser user;
-    if (normalized == student.email) {
-      user = student;
-    } else if (normalized == staff.email) {
-      user = staff;
-    } else {
-      throw StateError('No mock account for $email');
+    if (!Validators.isAluEmail(normalized) || password.trim().length < 6) {
+      throw const AuthFailure(AppStrings.invalidCredentials);
     }
+    final user = _userFor(normalized);
     _emit(user);
     return user;
+  }
+
+  AppUser _userFor(String email) {
+    if (email == student.email) {
+      return student;
+    }
+    if (email == staff.email) {
+      return staff;
+    }
+    final role = email.endsWith(Validators.aluStaffDomain)
+        ? UserRole.staff
+        : UserRole.student;
+    return AppUser(
+      uid: '${role.name}-${email.hashCode.abs()}',
+      fullName: _nameFromEmail(email),
+      email: email,
+      role: role,
+    );
+  }
+
+  String _nameFromEmail(String email) {
+    final local = email.split('@').first.replaceAll('.', ' ');
+    return local
+        .split(' ')
+        .where((part) => part.isNotEmpty)
+        .map(
+          (part) =>
+              '${part[0].toUpperCase()}${part.substring(1).toLowerCase()}',
+        )
+        .join(' ');
   }
 
   @override

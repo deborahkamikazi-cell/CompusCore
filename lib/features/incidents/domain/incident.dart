@@ -20,6 +20,18 @@ class IncidentLocation extends Equatable {
     return parts.where((part) => part.isNotEmpty).join(', ');
   }
 
+  /// Room and floor, used under a title that already names the building.
+  String get placeLabel {
+    final parts = <String>[
+      if (floor != null && floor!.isNotEmpty) floor!,
+      if (room != null && room!.isNotEmpty) room!,
+    ];
+    if (parts.isEmpty) {
+      return building;
+    }
+    return parts.join(', ');
+  }
+
   factory IncidentLocation.fromMap(Map<String, dynamic>? map) {
     final data = map ?? const <String, dynamic>{};
     return IncidentLocation(
@@ -53,6 +65,7 @@ class Incident extends Equatable {
     required this.createdAt,
     required this.updatedAt,
     this.staffNote,
+    this.statusTimestamps = const <IncidentStatus, DateTime>{},
   });
 
   final String id;
@@ -69,6 +82,24 @@ class Incident extends Equatable {
   final DateTime createdAt;
   final DateTime updatedAt;
   final String? staffNote;
+  final Map<IncidentStatus, DateTime> statusTimestamps;
+
+  bool matchesQuery(String query) {
+    final needle = query.trim().toLowerCase();
+    if (needle.isEmpty) {
+      return true;
+    }
+    final haystack = [
+      title,
+      referenceNumber,
+      description,
+      category.label,
+      location.displayLabel,
+      location.placeLabel,
+      reporterName,
+    ].join(' ').toLowerCase();
+    return haystack.contains(needle);
+  }
 
   Incident copyWith({
     String? id,
@@ -85,6 +116,7 @@ class Incident extends Equatable {
     DateTime? createdAt,
     DateTime? updatedAt,
     String? staffNote,
+    Map<IncidentStatus, DateTime>? statusTimestamps,
     bool clearStaffNote = false,
   }) {
     return Incident(
@@ -102,6 +134,7 @@ class Incident extends Equatable {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       staffNote: clearStaffNote ? null : staffNote ?? this.staffNote,
+      statusTimestamps: statusTimestamps ?? this.statusTimestamps,
     );
   }
 
@@ -121,5 +154,6 @@ class Incident extends Equatable {
     createdAt,
     updatedAt,
     staffNote,
+    statusTimestamps,
   ];
 }
