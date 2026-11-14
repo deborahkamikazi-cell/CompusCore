@@ -1,8 +1,12 @@
 # CampusCare
 
-CampusCare is a Flutter app for reporting and tracking campus incidents. Students with a verified ALU email submit issues (water, electricity, Wi-Fi, furniture, sanitation, safety, or other). Authorized staff review those reports and move them through Submitted, Under Review, In Progress, and Resolved.
+## Description
 
-This phase sets up the project structure, design system, routing, models, and placeholder screens. Firebase is a dependency, but it is not configured yet. The app still launches and uses in-memory sample data.
+CampusCare is a campus incident reporting app for Android and iOS. Students with a verified ALU email report issues such as water, electricity, Wi-Fi, furniture, sanitation, and safety, then search, filter, and track those reports. Authorized staff review every incident and update its status, with an optional note the student can see.
+
+A report includes a title, category, description, location, photos, and a priority of Low, Medium, High, or Critical. Status moves in one direction: Submitted, Under Review, In Progress, then Resolved. Students and staff have separate navigation. Staff screens are only reachable by staff accounts.
+
+The app is built with Flutter, Riverpod, and go_router. Firebase Authentication, Cloud Firestore, and Firebase Storage are the planned backend. They are not configured yet, so the running app uses in-memory sample data. Login, the student home, the report form, the reports list, incident details, and the staff status update screen are implemented. Splash, onboarding, registration, password reset, email verification, notifications, profile, and the staff dashboard are still placeholders.
 
 ## Run
 
@@ -11,7 +15,7 @@ flutter pub get
 flutter run
 ```
 
-Android and iOS only. From the splash screen, continue to onboarding and login. **Continue as student** and **Continue as staff** are temporary buttons so the role guard can be tried before Firebase Auth exists.
+Android and iOS only. From the splash screen, continue to onboarding and then login. Use `d.uwase@alustudent.com` / `password` for the student screens, or `jean.habimana@alueducation.com` / `password` for staff. Any other verified ALU email with a password of at least 6 characters also signs in against the mock repository.
 
 ## Project structure
 
